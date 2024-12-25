@@ -2,5 +2,12 @@
   "@context": "https://www.w3.org/ns/did/v1",
   "id": "did:web:custom-feed.onrender.com",
   "verificationMethod": [],
-  "authentication": []
+  "authentication": [],
+  "service": [
+    {
+      "id": "#feed-gen",
+      "type": "AtprotoFeedGenerator",
+      "serviceEndpoint": "https://custom-feed.onrender.com"
+    }
+  ]
 }
