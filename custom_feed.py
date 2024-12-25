@@ -1,20 +1,29 @@
 from collections import Counter
 import time
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, send_from_directory
+import os
 
 app = Flask(__name__)
+
+# Serve the .well-known directory
+@app.route('/.well-known/<path:filename>')
+def serve_well_known(filename):
+    return send_from_directory(os.path.join(app.root_path, '.well-known'), filename)
 
 @app.route('/xrpc/app.bsky.feed.getFeedSkeleton', methods=['GET'])
 def get_feed_skeleton():
     """Handle the Bluesky `getFeedSkeleton` request."""
     feed = [
         {"post": "at://did:example:alice/post/1"},
-        {"post": "at://did:example:alice/post/2"},
-        {"post": "at://did:example:bob/post/3"},
+        {"post": "at://did:example:bob/post/2"}
     ]
-    # Respond with the feed
     return jsonify({"feed": feed})
+
+@app.route('/')
+def index():
+    """Root endpoint to confirm the server is running."""
+    return jsonify({"message": "Custom feed generator is live. Visit /xrpc/app.bsky.feed.getFeedSkeleton for the feed."})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
